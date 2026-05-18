@@ -1,73 +1,67 @@
-# React + TypeScript + Vite
+# Hemant — Personal Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, animated personal portfolio website built with React 19, TypeScript, Tailwind CSS v4, and Framer Motion.
 
-Currently, two official plugins are available:
+## Sections
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Navbar** — sticky navigation with smooth scroll links
+- **Hero** — animated headline with staggered word entrance
+- **About** — personal bio and background
+- **Tech Stack** — technologies and tools
+- **Projects** — showcase of work with hover interactions
+- **Experience** — professional timeline
+- **Testimonials** — social proof carousel
+- **Contact** — contact form / links
+- **Footer** — links and credits
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Library / Tool |
+|-------|---------------|
+| Framework | React 19 |
+| Language | TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS v4 |
+| Animations | Framer Motion |
+| Icons | Lucide React |
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Start dev server (http://localhost:5173)
+npm run dev
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Type-check and build for production
+npm run build
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Preview production build
+npm run preview
+
+# Lint
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/
+│   ├── layout/       # Navbar, Footer
+│   └── sections/     # Hero, About, TechStack, Projects, Experience, Testimonials, Contact
+├── App.tsx
+├── main.tsx
+├── App.css
+└── index.css
+```
+
+## Animation Guidelines
+
+All animations use Framer Motion:
+
+- Scroll-triggered fades via `whileInView` with `viewport={{ once: true }}`
+- Card/list reveals staggered at `staggerChildren: 0.08`
+- Hover transitions on all interactive elements
+- Hero headline words stagger in, followed by subtext and CTAs
