@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import SectionBackdrop from '../ui/SectionBackdrop'
+import RevealText from '../ui/RevealText'
 import { experiences } from '../../data/portfolio'
 
 function Beam({ count }: { count: number }) {
@@ -54,8 +56,9 @@ function Beam({ count }: { count: number }) {
 
 export default function Experience() {
   return (
-    <section id="experience" style={{ background: '#050505', padding: '7rem 0', position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(124,58,237,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
+    <section id="experience" style={{ background: '#050505', padding: '7rem 0', position: 'relative', overflow: 'hidden' }}>
+      <SectionBackdrop colors={['#7c3aed', '#22d3ee', '#34d399']} intensity={0.8} />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(124,58,237,0.04) 0%, transparent 60%)', pointerEvents: 'none', zIndex: 1 }} />
 
       <div className="container-xl" style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -65,10 +68,10 @@ export default function Experience() {
             <div style={{ width: 28, height: 1, background: 'rgba(167,139,250,0.4)' }} />
           </div>
           <h2 style={{ fontSize: 'clamp(2.25rem,5vw,3.5rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 12 }}>
-            The <span className="gradient-text">journey</span> so far
+            <RevealText parts={[{ text: 'The' }, { text: 'journey', gradient: true }, { text: 'so far' }]} />
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>
-            4+ years of building, shipping, and iterating on products that matter.
+            3+ years of building, shipping, and iterating on frontend products that matter.
           </p>
         </motion.div>
 
@@ -86,8 +89,8 @@ export default function Experience() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.15, ease: 'easeOut' }}
-                whileHover={{ borderColor: 'rgba(255,255,255,0.2)' }}
-                style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14, padding: '1.5rem', transition: 'border-color 0.25s' }}
+                whileHover={{ y: -4, borderColor: 'rgba(167,139,250,0.4)', boxShadow: '0 24px 60px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.18)' }}
+                style={{ background: 'rgba(13,13,25,0.55)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14, padding: '1.5rem', transition: 'border-color 0.25s' }}
               >
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: '0.75rem' }}>
                   <div>
@@ -108,17 +111,6 @@ export default function Experience() {
                 </div>
               </motion.div>
             ))}
-
-            {/* Open to work */}
-            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '1rem 1.25rem', borderLeft: '2px solid rgba(52,211,153,0.4)' }}>
-              <div style={{ position: 'relative', flexShrink: 0 }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 10px #34d399' }} />
-                <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#34d399', animation: 'pulse 2s ease-in-out infinite', opacity: 0.4 }} />
-              </div>
-              <span style={{ fontSize: 14, color: '#34d399', fontWeight: 600 }}>Open to new opportunities</span>
-              <span style={{ fontSize: 12, fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>· Remote friendly</span>
-            </motion.div>
           </div>
         </div>
       </div>

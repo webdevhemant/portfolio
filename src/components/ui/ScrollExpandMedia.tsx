@@ -3,9 +3,10 @@ import { motion } from 'framer-motion'
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image'
-  mediaSrc: string
+  mediaSrc?: string
   posterSrc?: string
-  bgImageSrc: string
+  bgImageSrc?: string
+  mediaContent?: ReactNode
   title?: string
   date?: string
   scrollToExpand?: string
@@ -19,6 +20,7 @@ export default function ScrollExpandMedia({
   mediaSrc,
   posterSrc,
   bgImageSrc,
+  mediaContent,
   title,
   date,
   scrollToExpand = 'Scroll to expand',
@@ -93,15 +95,34 @@ export default function ScrollExpandMedia({
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  const mediaW = 300 + scrollProgress * (isMobile ? 650 : 1250)
-  const mediaH = 400 + scrollProgress * (isMobile ? 200 : 400)
+  // Clicking a nav link / CTA anchor finishes the hero (releasing the scroll lock)
+  // and smooth-scrolls to the target section.
+  useEffect(() => {
+    const goToHash = () => {
+      const hash = window.location.hash
+      if (!hash || hash.length < 2) return
+      setMediaFullyExpanded(true)
+      setShowContent(true)
+      setScrollProgress(1)
+      requestAnimationFrame(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
+      })
+    }
+    window.addEventListener('hashchange', goToHash)
+    return () => window.removeEventListener('hashchange', goToHash)
+  }, [])
+
+  const mediaW = 300 + scrollProgress * (isMobile ? 900 : 2100)
+  const mediaH = 400 + scrollProgress * (isMobile ? 900 : 1600)
   const textShift = scrollProgress * (isMobile ? 180 : 150)
+  // Intro opacity ramps up in sync with the scroll / expand.
+  const introOpacity = Math.min(1, Math.max(0, (scrollProgress - 0.2) / 0.8))
 
   const firstWord = title?.split(' ')[0] ?? ''
   const rest = title?.split(' ').slice(1).join(' ') ?? ''
 
   return (
-    <div ref={sectionRef} className="overflow-x-hidden">
+    <div ref={sectionRef} className="overflow-x-clip">
       <section className="relative flex flex-col items-center justify-start min-h-[100dvh]">
         <div className="relative w-full flex flex-col items-center min-h-[100dvh]">
 
@@ -111,12 +132,18 @@ export default function ScrollExpandMedia({
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
           >
-            <img
-              src={bgImageSrc}
-              alt="Background"
-              className="w-full h-full object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-black/50" />
+            {bgImageSrc ? (
+              <>
+                <img
+                  src={bgImageSrc}
+                  alt="Background"
+                  className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-black/50" />
+              </>
+            ) : (
+              <div className="w-full h-full" style={{ background: 'radial-gradient(ellipse at 50% 25%, #160f26 0%, #06060c 65%)' }} />
+            )}
           </motion.div>
 
           <div className="w-full flex flex-col items-center relative z-10">
@@ -128,12 +155,17 @@ export default function ScrollExpandMedia({
                 style={{
                   width: `${mediaW}px`,
                   height: `${mediaH}px`,
-                  maxWidth: '95vw',
-                  maxHeight: '85vh',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
                   boxShadow: '0 0 60px rgba(0,0,0,0.6)',
                 }}
               >
-                {mediaType === 'video' ? (
+                {mediaContent ? (
+                  <div className="relative w-full h-full">
+                    {mediaContent}
+                    <motion.div className="absolute inset-0 bg-black" animate={{ opacity: 0.3 - scrollProgress * 0.12 }} transition={{ duration: 0.2 }} />
+                  </div>
+                ) : mediaType === 'video' ? (
                   <div className="relative w-full h-full pointer-events-none">
                     <video
                       src={mediaSrc}
@@ -156,7 +188,7 @@ export default function ScrollExpandMedia({
                     />
                     <motion.div
                       className="absolute inset-0 bg-black/40"
-                      animate={{ opacity: 0.7 - scrollProgress * 0.35 }}
+                      animate={{ opacity: 0.7 - scrollProgress * 0.4 }}
                       transition={{ duration: 0.2 }}
                     />
                   </div>
@@ -187,37 +219,38 @@ export default function ScrollExpandMedia({
               {overlayContent}
 
               {/* Title — splits apart as media expands */}
-              <div
-                className={`flex flex-col items-center justify-center gap-2 w-full relative z-10 pointer-events-none select-none ${
-                  textBlend ? 'mix-blend-difference' : ''
-                }`}
-              >
-                <h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white"
-                  style={{ transform: `translateX(-${textShift}vw)` }}
+              {title && (
+                <div
+                  className={`flex flex-col items-center justify-center gap-2 w-full relative z-10 pointer-events-none select-none ${
+                    textBlend ? 'mix-blend-difference' : ''
+                  }`}
                 >
-                  {firstWord}
-                </h1>
-                <h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white"
-                  style={{ transform: `translateX(${textShift}vw)` }}
-                >
-                  {rest}
-                </h1>
-              </div>
-            </div>
+                  <h1
+                    className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white"
+                    style={{ transform: `translateX(-${textShift}vw)` }}
+                  >
+                    {firstWord}
+                  </h1>
+                  <h1
+                    className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white"
+                    style={{ transform: `translateX(${textShift}vw)` }}
+                  >
+                    {rest}
+                  </h1>
+                </div>
+              )}
 
-            {/* Content revealed after full expansion — mount only when ready so child animate props fire correctly */}
-            {showContent && (
-              <motion.div
-                className="w-full"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-              >
-                {children}
-              </motion.div>
-            )}
+              {/* Identity overlay — opacity ramps in sync with the scroll/expand.
+                  paddingTop reserves the floating navbar so the intro centers below it. */}
+              {children && (
+                <div
+                  className="absolute inset-0 z-30 flex items-center justify-center px-6"
+                  style={{ opacity: introOpacity, pointerEvents: showContent ? 'auto' : 'none', paddingTop: 76 }}
+                >
+                  <div className="w-full">{children}</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

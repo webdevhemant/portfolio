@@ -12,10 +12,9 @@ body {
   overflow-x: hidden;
 }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
-::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+/* Scrollbar hidden — the top ScrollProgress bar is the scroll indicator */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 ::selection { background: rgba(124,58,237,0.3); }
 
@@ -110,4 +109,14 @@ body {
 @keyframes grid-pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.8; }
+}
+
+/* Slow panning gradient border */
+@keyframes border-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.animate-border-pan {
+  background-size: 200% 200%;
+  animation: border-pan 8s linear infinite;
 }

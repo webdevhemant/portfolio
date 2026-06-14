@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import Marquee from '../ui/Marquee'
+import SectionBackdrop from '../ui/SectionBackdrop'
+import RevealText from '../ui/RevealText'
 import { techStack } from '../../data/portfolio'
 
 const tagStyle: Record<string, { color: string; bg: string; border: string }> = {
@@ -26,6 +28,7 @@ const row2 = techStack.filter(t => ['backend', 'devops', 'design'].includes(t.ca
 export default function TechStack() {
   return (
     <section id="stack" style={{ background: '#060606', padding: '7rem 0', position: 'relative', overflow: 'hidden' }}>
+      <SectionBackdrop colors={['#f472b6', '#a78bfa', '#22d3ee']} intensity={0.8} />
       {/* grid overlay */}
       <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '50px 50px', pointerEvents: 'none' }} />
       {/* top fade */}
@@ -43,7 +46,7 @@ export default function TechStack() {
               <div style={{ width: 28, height: 1, background: 'rgba(167,139,250,0.4)' }} />
             </div>
             <h2 style={{ fontSize: 'clamp(2.25rem,5vw,3.5rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 12 }}>
-              Tools I <span className="gradient-text">master</span>
+              <RevealText parts={[{ text: 'Tools I' }, { text: 'master', gradient: true }]} />
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 480, margin: '0 auto' }}>
               My go-to toolkit for building modern, scalable products from idea to production.
@@ -62,7 +65,7 @@ export default function TechStack() {
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(255,255,255,0.08)' }}>
             {[
               { label: 'Frontend Mastery', desc: 'React, Next.js, TypeScript — pixel-perfect UIs at any scale.', color: '#a78bfa' },
-              { label: 'AI Integration', desc: 'OpenAI, Claude, LangChain — LLMs wired into real products.', color: '#f472b6' },
+              { label: 'Motion & Animation', desc: 'Framer Motion & Three.js — fluid, GPU-friendly interactions.', color: '#f472b6' },
               { label: 'Performance First', desc: '95+ Lighthouse scores. Sub-100ms interactions. Real metrics.', color: '#fbbf24' },
             ].map(({ label, desc, color }) => (
               <div key={label} style={{ padding: '1.75rem', background: '#060606' }}>
